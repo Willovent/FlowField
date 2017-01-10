@@ -1,4 +1,5 @@
 import settings from './settings';
+import { Vector } from './vector';
 
 export class Particle {
     position: Vector = Vector.random(settings.width, settings.height);
@@ -12,6 +13,8 @@ export class Particle {
         if (x && y) {
             this.position.x = x;
             this.position.y = y;
+            this.previousPosition.x = x;
+            this.previousPosition.y = y;
         }
         this.graphics = new PIXI.Graphics().lineStyle(2, settings.color, settings.particuleAlpha);
         this.graphics.moveTo(this.previousPosition.x, this.previousPosition.y);
@@ -34,7 +37,7 @@ export class Particle {
     }
 
     applyForce(force: Vector) {
-        this.accleration.add(force).add(Vector.random(200,200).add(new Vector(-100,-100)).mult(settings.randomFactor));
+        this.accleration.add(force).add(Vector.random(200, 200).add(new Vector(-100, -100)).mult(settings.randomFactor));
     }
 
     show() {
@@ -66,43 +69,5 @@ export class Particle {
             this.position.y = settings.height;
             this.updatePrevious();
         }
-    }
-
-}
-
-
-export class Vector {
-
-    constructor(public x: number, public y: number) { }
-
-    static random(maxX: number, maxY: number): Vector {
-        let x = Math.floor(Math.random() * maxX);
-        let y = Math.floor(Math.random() * maxY);
-        return new Vector(x, y);
-    }
-
-    add(vector: Vector): Vector {
-        this.x += vector.x;
-        this.y += vector.y;
-        return this;
-    }
-
-    mult(fact: number): Vector {
-        this.x *= fact;
-        this.y *= fact;
-        return this;
-    }
-
-    limit(max: number) {
-        this.x = (Math.abs(this.x) > max) ? (this.x * 0.9) : this.x;
-        this.y = (Math.abs(this.y) > max) ? (this.y * 0.9) : this.y;
-    }
-
-    clone = (): Vector => new Vector(this.x, this.y);
-
-    static fromAngle(angle: number): Vector {
-        let x = Math.cos(angle);
-        let y = Math.sin(angle);
-        return new Vector(x, y);
     }
 }
