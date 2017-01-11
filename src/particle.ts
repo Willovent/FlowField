@@ -19,11 +19,11 @@ export class Particle {
         }
 
         this.previousPosition = this.position.clone();
+        setTimeout(() => this.hasEnded = true, settings.particuleLifeTime * 1e3);
 
         this.graphics = new PIXI.Graphics().lineStyle(2, settings.color, settings.particuleAlpha);
         this.graphics.moveTo(this.previousPosition.x, this.previousPosition.y);
         stage.addChild(this.graphics);
-        setTimeout(() => this.hasEnded = true, settings.particuleLifeTime * 1e3);
     }
 
     follow(vectors: Vector[][]) {
