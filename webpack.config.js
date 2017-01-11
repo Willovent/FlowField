@@ -4,10 +4,12 @@ module.exports = {
   entry: {
     app: './src/index.ts',
   },
+ devtool: "source-map",
   output: {
     filename: '[name].bundle.js',
     path: './dist',
-    publicPath: '/assets',
+    publicPath: './assets',
+    sourceMapFilename : '[file].map'
   },  
   resolve: {
     extensions: ['',  '.ts', '.js']

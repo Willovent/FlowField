@@ -9,9 +9,10 @@ let settings = {
     randomFactor: 0.00,
     acclerationFactor: 9,
     displayVector: false,
-    particuleAlpha: .1,
-    particulePerClick: 100,
+    particuleAlpha: 0.1,
+    particulePerClick: 50,
     particuleLifeTime: 3,
-    blur: true
+    blur: true,
+    particuleSize: 3
 };
 export default settings;

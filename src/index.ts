@@ -3,6 +3,7 @@ import 'pixi.js';
 import { Noise } from 'noisejs';
 import { Particle } from './particle';
 import { Vector } from './vector';
+import { Color } from './color'
 
 var renderer = PIXI.autoDetectRenderer(settings.width, settings.height, { backgroundColor: 0xffffff });
 document.body.appendChild(renderer.view);
@@ -10,7 +11,7 @@ document.body.appendChild(renderer.view);
 var stage = new PIXI.Container();
 stage.interactive = true;
 if (settings.blur) {
-    stage.filters = [new PIXI.filters.BlurFilter(8, 8)]
+    stage.filters = [new PIXI.filters.BlurFilter(5, 5)]
 }
 stage.hitArea = new PIXI.Rectangle(0, 0, settings.width, settings.height);
 let pOffset = .01;
@@ -52,6 +53,8 @@ for (var i = 0; i < settings.particulesNumber; i++) {
     }
 };
 
+var color = new Color();
+
 requestAnimationFrame(animate);
 function animate() {
     for (let particule of particules) {
@@ -61,7 +64,8 @@ function animate() {
         particule.show();
     }
     pOffset += .005;
-
+    color.update();
+    settings.color = color.toHexa();
     renderer.render(stage);
     requestAnimationFrame(animate);
 }

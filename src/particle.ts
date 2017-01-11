@@ -49,7 +49,7 @@ export class Particle {
 
     show() {
         if (this.hasEnded) return;
-        // this.graphics.lineStyle(1,settings.color,.1);
+        this.graphics.lineStyle(settings.particuleSize,settings.color,settings.particuleAlpha);
         this.graphics.moveTo(this.previousPosition.x, this.previousPosition.y);
         this.graphics.lineTo(this.position.x, this.position.y);
         this.updatePrevious();
