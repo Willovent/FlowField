@@ -1,14 +1,17 @@
 import settings from './settings';
+import 'pixi.js';
+import { Noise } from 'noisejs';
 import { Particle } from './particle';
 import { Vector } from './vector';
 
-let Noise = (<any>window).Noise;
 var renderer = PIXI.autoDetectRenderer(settings.width, settings.height, { backgroundColor: 0xffffff });
 document.body.appendChild(renderer.view);
 
 var stage = new PIXI.Container();
 stage.interactive = true;
-stage.filters = [new PIXI.filters.BlurFilter(8, 8)]
+if (settings.blur) {
+    stage.filters = [new PIXI.filters.BlurFilter(8, 8)]
+}
 stage.hitArea = new PIXI.Rectangle(0, 0, settings.width, settings.height);
 let pOffset = .01;
 
@@ -19,7 +22,7 @@ const noiseGen = new Noise(Math.random());
 for (var i = 0; i <= cols; i++) {
     flowField.push([])
     for (var j = 0; j <= rows; j++) {
-        var angle = noiseGen.perlin3(j * settings.perlinFactor, i * settings.perlinFactor, pOffset) * Math.PI * 2 * 4;
+        var angle = noiseGen.perlin2(j * settings.perlinFactor, i * settings.perlinFactor) * Math.PI * 2 * 4;
         var vector = Vector.fromAngle(angle)
         flowField[i].push(vector);
         if (settings.displayVector) {
@@ -39,32 +42,18 @@ for (var i = 0; i < settings.particulesNumber; i++) {
     particules.push(new Particle(stage));
 }
 
-setInterval(() => {
-    for (let particule of particules) {
-        particule.position = Vector.random(settings.width, settings.height);
-        particule.updatePrevious();
-    }
-}, 10e3);
-
 (<any>stage).mousedown = (event) => {
     var coordinates = event.data.getLocalPosition(stage);
-    for (var i = -10; i < 10; i++)
-        for (var j = -10; j < 10; j++) {
-            particules.push(new Particle(stage, i + coordinates.x, j + coordinates.y));
-        }
+    let mouseVector = new Vector(coordinates.x, coordinates.y);
+    for (var i = 0; i < settings.particulePerClick; i++) {
+        let offSetVector = Vector.random(20, 20).add(-10);
+        let particuleVector = mouseVector.clone().add(offSetVector);
+        particules.push(new Particle(stage, particuleVector));
+    }
 };
 
 requestAnimationFrame(animate);
 function animate() {
-    // for (var i = 0; i <= cols; i++) {
-    //     flowField.push([])
-    //     for (var j = 0; j <= rows; j++) {
-    //         var angle = noiseGen.perlin2(j * settings.perlinFactor, i * settings.perlinFactor, pOffset) * Math.PI * 2 * 4;
-    //         var vector = Vector.fromAngle(angle)
-    //         flowField[i][j] = vector;
-    //     }
-    // }
-
     for (let particule of particules) {
         particule.follow(flowField);
         particule.update();

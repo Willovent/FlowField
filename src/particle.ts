@@ -2,26 +2,32 @@ import settings from './settings';
 import { Vector } from './vector';
 
 export class Particle {
-    position: Vector = Vector.random(settings.width, settings.height);
+    position: Vector;
     velocity: Vector = new Vector(0, 0);
     accleration: Vector = new Vector(0, 0);
     maxspeed: number = 4;
-    previousPosition: Vector = this.position.clone();
+    previousPosition: Vector;
     graphics: PIXI.Graphics;
+    hasEnded: boolean = false;
 
-    constructor(public stage: PIXI.Container, x?: number, y?: number) {
-        if (x && y) {
-            this.position.x = x;
-            this.position.y = y;
-            this.previousPosition.x = x;
-            this.previousPosition.y = y;
+    constructor(public stage: PIXI.Container, initialPosition?: Vector) {
+
+        if (initialPosition) {
+            this.position = initialPosition;
+        } else {
+            this.position = Vector.random(settings.width, settings.height);
         }
+
+        this.previousPosition = this.position.clone();
+
         this.graphics = new PIXI.Graphics().lineStyle(2, settings.color, settings.particuleAlpha);
         this.graphics.moveTo(this.previousPosition.x, this.previousPosition.y);
         stage.addChild(this.graphics);
+        setTimeout(() => this.hasEnded = true, settings.particuleLifeTime * 1e3);
     }
 
     follow(vectors: Vector[][]) {
+        if (this.hasEnded) return;
         var x = Math.floor((this.position.x) / settings.scale);
         var y = Math.floor((this.position.y) / settings.scale);
         var force = vectors[x][y];
@@ -29,6 +35,7 @@ export class Particle {
     }
 
     update() {
+        if (this.hasEnded) return;
         this.velocity.add(this.accleration.mult(settings.acclerationFactor));
         // this.velocity.limit(this.maxspeed);
         this.position.add(this.velocity);
@@ -41,6 +48,7 @@ export class Particle {
     }
 
     show() {
+        if (this.hasEnded) return;
         // this.graphics.lineStyle(1,settings.color,.1);
         this.graphics.moveTo(this.previousPosition.x, this.previousPosition.y);
         this.graphics.lineTo(this.position.x, this.position.y);
@@ -53,6 +61,7 @@ export class Particle {
     }
 
     edges() {
+        if (this.hasEnded) return;
         if (this.position.x > settings.width) {
             this.position.x = 0;
             this.updatePrevious();

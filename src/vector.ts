@@ -8,9 +8,14 @@ export class Vector {
         return new Vector(x, y);
     }
 
-    add(vector: Vector): Vector {
-        this.x += vector.x;
-        this.y += vector.y;
+    add(vector: Vector | number): Vector {
+        if (typeof (vector) == 'number') {
+            this.x += vector;
+            this.y += vector;
+        } else {
+            this.x += vector.x;
+            this.y += vector.y;
+        }
         return this;
     }
 

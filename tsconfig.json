@@ -1,10 +1,5 @@
 {
-    "compileOnSave": true,
     "compilerOptions": {
-        "outDir": "dist",
-        "sourceMap": true,
-        "module": "system",
-        "outFile": "dist/bundle.js",
         "target": "es5"
     },
     "files": [
