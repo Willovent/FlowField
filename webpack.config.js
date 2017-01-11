@@ -8,7 +8,6 @@ module.exports = {
   output: {
     filename: '[name].bundle.js',
     path: './dist',
-    publicPath: './assets',
     sourceMapFilename : '[file].map'
   },  
   resolve: {
