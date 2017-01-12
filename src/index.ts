@@ -3,7 +3,7 @@ import 'pixi.js';
 import { Noise } from 'noisejs';
 import { Particle } from './particle';
 import { Vector } from './vector';
-import { Color } from './color'
+import { Color } from './color';
 
 var renderer = PIXI.autoDetectRenderer(settings.width, settings.height, { backgroundColor: 0xffffff });
 document.body.appendChild(renderer.view);
